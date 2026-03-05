@@ -1,0 +1,49 @@
+<section class="form-page page-with-table">
+  <div class="form-header">
+    <h1>{{ tituloFormulario() }}</h1>
+  </div>
+
+  @if (cargando()) {
+  <div class="form-card">Cargando datos...</div>
+  } @else {
+  <form class="form-card" [formGroup]="form" (ngSubmit)="guardar()">
+    <div class="grid">
+      <label>
+        Cliente
+        <select formControlName="idPersona">
+          <option [value]="0">Seleccionar cliente</option>
+          @for (cliente of clientes(); track cliente.idPersona) {
+          <option [value]="cliente.idPersona">
+            {{ cliente.nombre }} - ID {{ cliente.idPersona }}
+          </option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Tipo Movimiento
+        <select formControlName="tipoMovimiento">
+          <option value="CREDITO">CREDITO</option>
+          <option value="DEBITO">DEBITO</option>
+        </select>
+      </label>
+
+      <label>
+        Valor
+        <input type="number" step="0.01" formControlName="valor" />
+      </label>
+    </div>
+
+    <div class="acciones">
+      <a class="boton" routerLink="/movimientos">Cancelar</a>
+      <button
+        class="boton"
+        type="submit"
+        [disabled]="form.invalid || guardando()"
+      >
+        {{ guardando() ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </form>
+  }
+</section>

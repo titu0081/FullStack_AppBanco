@@ -1,1 +1,72 @@
-<p>En construcción!</p>
+<section class="cuentasSection">
+  <div class="header">
+    <h1>Cuentas</h1>
+    <div class="options">
+      <input
+        class="searchInput"
+        type="search"
+        placeholder="Buscar cuentas..."
+        (input)="search($event)"
+      />
+      <button class="boton" type="button" (click)="goFormCuenta()">
+        Nuevo
+      </button>
+    </div>
+  </div>
+  <div class="bodyTable">
+    <table class="table">
+      <thead>
+        <tr>
+          <th># Fila</th>
+          <th>Numero Cuenta</th>
+          <th>Tipo Cuenta</th>
+          <th>Saldo Inicial</th>
+          <th>Saldo Actual</th>
+          <th>Estado Cuenta</th>
+          <th>ID Cliente</th>
+          <th class="actionsTable">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (cargando()) {
+        <tr>
+          <td class="sin-datos" colspan="8">Cargando cuentas...</td>
+        </tr>
+        } @else if (cuentas().length === 0) {
+        <tr>
+          <td class="sin-datos" colspan="8">No hay datos para cuentas</td>
+        </tr>
+        } @else { @for (cuenta of cuentas(); track cuenta.idCuenta; let i =
+        $index) {
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ cuenta.numeroCuenta }}</td>
+          <td>{{ cuenta.tipoCuenta }}</td>
+          <td>{{ cuenta.saldoInicial }}</td>
+          <td>{{ cuenta.saldoActual ?? cuenta.saldoInicial }}</td>
+          <td>{{ cuenta.estadoCuenta ? 'Activo' : 'Inactivo' }}</td>
+          <td>{{ cuenta.cliente.idPersona }}</td>
+          <td class="actionsTable">
+            <div class="buttonAction">
+              <button
+                class="boton"
+                type="button"
+                (click)="goEditCuenta(cuenta)"
+              >
+                Editar
+              </button>
+              <button
+                class="boton"
+                type="button"
+                (click)="deleteCuenta(cuenta)"
+              >
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+        } }
+      </tbody>
+    </table>
+  </div>
+</section>

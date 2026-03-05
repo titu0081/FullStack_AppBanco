@@ -1,1 +1,72 @@
-<p>En construcción!</p>
+<section class="movimientosSection">
+  <div class="header">
+    <h1>Movimientos</h1>
+    <div class="options">
+      <input
+        class="searchInput"
+        type="search"
+        placeholder="Buscar movimientos..."
+        (input)="search($event)"
+      />
+      <button class="boton" type="button" (click)="goFormMovimiento()">
+        Nuevo
+      </button>
+    </div>
+  </div>
+  <div class="bodyTable">
+    <table class="table">
+      <thead>
+        <tr>
+          <th># Fila</th>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Valor</th>
+          <th>Saldo</th>
+          <th>Numero Cuenta</th>
+          <th>ID Cliente</th>
+          <th class="actionsTable">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (cargando()) {
+        <tr>
+          <td class="sin-datos" colspan="8">Cargando movimientos...</td>
+        </tr>
+        } @else if (movimientos().length === 0) {
+        <tr>
+          <td class="sin-datos" colspan="8">No hay datos para movimientos</td>
+        </tr>
+        } @else { @for (movimiento of movimientos(); track
+        movimiento.idMovimiento; let i = $index) {
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ movimiento.fecha }}</td>
+          <td>{{ movimiento.tipoMovimiento }}</td>
+          <td>{{ movimiento.valor }}</td>
+          <td>{{ movimiento.saldo }}</td>
+          <td>{{ movimiento.cuenta.numeroCuenta }}</td>
+          <td>{{ movimiento.cuenta.cliente.idPersona }}</td>
+          <td class="actionsTable">
+            <div class="buttonAction">
+              <button
+                class="boton"
+                type="button"
+                (click)="goEditMovimiento(movimiento)"
+              >
+                Editar
+              </button>
+              <button
+                class="boton"
+                type="button"
+                (click)="deleteMovimiento(movimiento)"
+              >
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+        } }
+      </tbody>
+    </table>
+  </div>
+</section>
