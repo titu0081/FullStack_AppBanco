@@ -8,8 +8,9 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Cliente, Movimiento } from '../../../model/interfaces.models';
+import { Cliente, Cuenta, Movimiento } from '../../../model/interfaces.models';
 import { ClientesService } from '../../../services/clientes.servicio';
+import { CuentasService } from '../../../services/cuentas.servicio';
 import { MovimientosService } from '../../../services/movimientos.servicio';
 
 @Component({
@@ -25,8 +26,10 @@ export class FormMovimientos implements OnInit {
   private readonly router = inject(Router);
   private readonly movimientosService = inject(MovimientosService);
   private readonly clientesService = inject(ClientesService);
+  private readonly cuentasService = inject(CuentasService);
 
   readonly clientes = signal<Cliente[]>([]);
+  readonly cuentas = signal<Cuenta[]>([]);
   readonly cargando = signal<boolean>(false);
   readonly guardando = signal<boolean>(false);
   readonly esEdicion = signal<boolean>(false);
@@ -44,7 +47,7 @@ export class FormMovimientos implements OnInit {
   private idMovimiento: number | null = null;
 
   ngOnInit(): void {
-    this.cargarClientes();
+    this.cargarCatalogos();
 
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!Number.isNaN(id) && id > 0) {
@@ -63,13 +66,21 @@ export class FormMovimientos implements OnInit {
     this.guardando.set(true);
     const formValue = this.form.getRawValue();
 
+    const cuentaCliente = this.cuentas().find(
+      (cuenta) => cuenta.cliente.idPersona === formValue.idPersona,
+    );
+
+    if (!cuentaCliente?.idCuenta) {
+      this.guardando.set(false);
+      window.alert('El cliente seleccionado no tiene una cuenta registrada.');
+      return;
+    }
+
     const payload = {
       tipoMovimiento: formValue.tipoMovimiento,
       valor: formValue.valor,
       cuenta: {
-        cliente: {
-          idPersona: formValue.idPersona,
-        },
+        idCuenta: cuentaCliente.idCuenta,
       },
     } as Movimiento;
 
@@ -92,16 +103,41 @@ export class FormMovimientos implements OnInit {
     });
   }
 
-  private cargarClientes(): void {
+  private cargarCatalogos(): void {
     this.cargando.set(true);
+
+    let clientesCargados = false;
+    let cuentasCargadas = false;
+
+    const finalizarCarga = (): void => {
+      if (clientesCargados && cuentasCargadas) {
+        this.cargando.set(false);
+      }
+    };
+
     this.clientesService.get().subscribe({
       next: (data) => {
         this.clientes.set(data ?? []);
-        this.cargando.set(false);
+        clientesCargados = true;
+        finalizarCarga();
       },
       error: () => {
         this.clientes.set([]);
-        this.cargando.set(false);
+        clientesCargados = true;
+        finalizarCarga();
+      },
+    });
+
+    this.cuentasService.get().subscribe({
+      next: (data) => {
+        this.cuentas.set(data ?? []);
+        cuentasCargadas = true;
+        finalizarCarga();
+      },
+      error: () => {
+        this.cuentas.set([]);
+        cuentasCargadas = true;
+        finalizarCarga();
       },
     });
   }

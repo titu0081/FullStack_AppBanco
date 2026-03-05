@@ -38,6 +38,15 @@ public class MovimientoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateMovimiento(@PathVariable Integer id, @RequestBody Movimiento movimiento) {
+        try {
+            return ResponseEntity.ok(movimientoService.updateMovimiento(id, movimiento));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMovimiento(@PathVariable Integer id) {
