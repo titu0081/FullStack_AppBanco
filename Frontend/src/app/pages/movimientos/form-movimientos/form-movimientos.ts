@@ -65,10 +65,16 @@ export class FormMovimientos implements OnInit {
 
     this.guardando.set(true);
     const formValue = this.form.getRawValue();
+    console.log('Valor del formulario:', formValue);
 
     const cuentaCliente = this.cuentas().find(
-      (cuenta) => cuenta.cliente.idPersona === formValue.idPersona,
+      (cuenta) => cuenta.cliente.idPersona === Number(formValue.idPersona),
     );
+
+    console.log('Clientes disponibles:', this.clientes());
+    console.log('Cuentas disponibles:', this.cuentas());
+
+    console.log('Cuenta del cliente encontrado:', cuentaCliente);
 
     if (!cuentaCliente?.idCuenta) {
       this.guardando.set(false);
