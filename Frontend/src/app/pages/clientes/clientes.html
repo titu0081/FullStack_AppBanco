@@ -1,0 +1,65 @@
+<section class="clientesSection">
+  <div class="header">
+    <h1>Clientes</h1>
+    <div class="options">
+      <input
+        class="searchInput"
+        type="search"
+        placeholder="Buscar clientes..."
+        (input)="search($event)"
+      />
+      <button class="boton" type="button" (click)="goFormClient()">Nuevo</button>
+    </div>
+  </div>
+  <div class="bodyTable">
+    <table class="table">
+      <thead>
+        <tr>
+          <th># Fila</th>
+          <th>Nombre</th>
+          <th>Identificacion</th>
+          <th>Edad</th>
+          <th>Genero</th>
+          <th>Direccion</th>
+          <th>Telefono</th>
+          <th>Estado</th>
+          <th class="actionsTable">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (cargando()) {
+          <tr>
+            <td class="sin-datos" colspan="9">Cargando clientes...</td>
+          </tr>
+        } @else if (clientes().length === 0) {
+          <tr>
+            <td class="sin-datos" colspan="9">No hay datos para clientes</td>
+          </tr>
+        } @else {
+          @for (cliente of clientes(); track cliente.idPersona; let i = $index) {
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ cliente.nombre }}</td>
+              <td>{{ cliente.identificacion }}</td>
+              <td>{{ cliente.edad }}</td>
+              <td>{{ cliente.genero }}</td>
+              <td>{{ cliente.direccion }}</td>
+              <td>{{ cliente.telefono }}</td>
+              <td>{{ cliente.estado ? 'Activo' : 'Inactivo' }}</td>
+              <td class="actionsTable">
+                <div class="buttonAction">
+                  <button class="boton" type="button" (click)="goEditClient(cliente)">
+                    Editar
+                  </button>
+                  <button class="boton" type="button" (click)="deleteCliente(cliente)">
+                    Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

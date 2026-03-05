@@ -1,0 +1,27 @@
+.menu {
+  padding: 2rem 0;
+}
+
+.menu-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-list a {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  color: #1f1f1f;
+  text-decoration: none;
+  border-bottom: 1px solid #ececec;
+}
+
+.menu-list a:hover {
+  background: #f4f4f4;
+}
+
+.menu-list a.is-active {
+  font-weight: 600;
+  color: #0f2f6d;
+  background: #eef3ff;
+}

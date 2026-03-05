@@ -1,0 +1,74 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.boton {
+  padding: 0.5rem 1rem;
+  background: #ffdd00;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+
+  thead {
+    background-color: #f9fafc;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    height: 4rem;
+  }
+
+  th,
+  td {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-left: none;
+    border-right: none;
+    padding: 8px;
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+}
+
+.bodyTable {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.page-with-table {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.actionsTable {
+  text-align: center;
+}
+
+.buttonAction {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.searchInput {
+  height: 2rem;
+  border: 0.1rem solid #d1d2d3;
+  border-radius: 0.5rem;
+  padding: 1rem 0.5rem;
+  margin-top: 1rem;
+}
