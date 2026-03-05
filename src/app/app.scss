@@ -1,0 +1,18 @@
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-sidebar {
+  width: 20rem;
+  border-right: 1px solid #d8d8d8;
+  background: #fff;
+}
+
+.app-content {
+  flex: 1;
+  padding: 24px;
+  background: #f7f7f7;
+  overflow: hidden;
+}
