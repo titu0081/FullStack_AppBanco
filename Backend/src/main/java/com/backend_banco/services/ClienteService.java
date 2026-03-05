@@ -1,17 +1,26 @@
 package com.backend_banco.services;
 
 import com.backend_banco.models.Cliente;
+import com.backend_banco.models.Cuenta;
 import com.backend_banco.repositories.ClienteRepository;
+import com.backend_banco.repositories.CuentaRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ClienteService {
     
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private CuentaRepository cuentaRepository;
     
     public List<Cliente> getAllClientes() {
         return clienteRepository.findAll();
@@ -52,7 +61,31 @@ public class ClienteService {
     
     @Transactional
     public void deleteCliente(Integer id) {
-        Cliente cliente = getClienteById(id);
-        clienteRepository.delete(cliente);
+        if (!clienteRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado con id: " + id);
+        }
+
+        boolean tieneCuentas = cuentaRepository.findAll().stream()
+            .map(Cuenta::getCliente)
+            .filter(Objects::nonNull)
+            .anyMatch(cliente -> Objects.equals(cliente.getIdPersona(), id));
+
+        if (tieneCuentas) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "No se puede eliminar el cliente porque tiene cuentas asociadas"
+            );
+        }
+
+        try {
+            clienteRepository.deleteById(id);
+            clienteRepository.flush();
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "No se puede eliminar el cliente por restricciones de integridad",
+                e
+            );
+        }
     }
 }

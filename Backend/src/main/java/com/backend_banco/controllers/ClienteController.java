@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
@@ -36,8 +37,12 @@ public class ClienteController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable Integer id) {
-        clienteService.deleteCliente(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteCliente(@PathVariable Integer id) {
+        try {
+            clienteService.deleteCliente(id);
+            return ResponseEntity.noContent().build();
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        }
     }
 }
